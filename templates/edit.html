@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<table class="table table-hover table-striped">
+<thead>
+<tr>
+    <th>Item</th>
+    <th>Value</th>
+</tr>
+</thead>
+    <tbody>
+        <form action="/save" method="post">
+            <input type="hidden" name="sys_id" value="{{ context.system['id'] }}">
+        <tr><td>ID</td><td>{{ context.system["id"] }}</td></tr>
+        <tr><td>Name</td><td><input type="text" value="{{ context.system['name']}}" name="sys_name"></td></tr>
+        <tr><td>IP</td><td><input type="text" value="{{ context.system['ip']}}" name="sys_ip"></td></tr>
+        <tr><td>Url</td><td><input type="text" value="{{ context.system['url']}}" name="sys_url"></td></tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td><button type="reset">Cancel</button>&nbsp;<button type="submit">Save</button></td>
+        </tr>
+        </form>
+    </tbody>
+</table>
+{% endblock %}
