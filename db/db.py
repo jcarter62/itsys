@@ -17,7 +17,7 @@ class DB:
         self._create_systems_table()
         if self._systems_records() <= 0:
             self._create_empty_systems()
-            self.insert_system(1, 'systemname', '1.2.3.4', 'http://systemname', 'misc')
+            self.insert_system(1, 'systemname', '1.2.3.4', 'http://systemname', 'misc', 'other')
 
     def _commit(self):
         if self._conn is not None:
@@ -53,7 +53,8 @@ class DB:
                         name text NOT NULL,
                         ip text,
                         url text,
-                        systype text
+                        systype text,
+                        location text
                     ); """
             c.execute(cmd)
         except Error as e:
@@ -91,12 +92,12 @@ class DB:
             print(e)
         return
 
-    def insert_system(self, id, name, ip, url, systype):
+    def insert_system(self, id, name, ip, url, systype, location):
         try:
-            cmd = 'insert into systems (id, name, ip, url, systype) values ' \
-                  '( ?, ?, ?, ?, ?);'
+            cmd = 'insert into systems (id, name, ip, url, systype, location) values ' \
+                  '( ?, ?, ?, ?, ?, ?);'
             c = self._conn.cursor()
-            c.execute(cmd, (id, name, ip, url, systype))
+            c.execute(cmd, (id, name, ip, url, systype, location))
             self._commit()
 
         except Error as e:
@@ -106,7 +107,7 @@ class DB:
     def load_systems(self) -> []:
         systems = []
         try:
-            cmd = 'select id, name, ip, url, systype from systems;'
+            cmd = 'select id, name, ip, url, systype, location from systems;'
             c = self._conn.cursor()
             c = c.execute(cmd)
             rows = c.fetchall()
@@ -117,7 +118,8 @@ class DB:
                     "name": row[1],
                     "ip": row[2],
                     "url": row[3],
-                    "type": row[4]
+                    "systype": row[4],
+                    "location": row[5]
                 }
                 systems.append(one)
 
@@ -128,7 +130,7 @@ class DB:
     def load_one_system(self, sys_id) -> {}:
         system = {}
         try:
-            cmd = 'select id, name, ip, url, systype from systems where id = ?;'
+            cmd = 'select id, name, ip, url, systype, location from systems where id = ?;'
             c = self._conn.cursor()
             c = c.execute(cmd, sys_id)
             row = c.fetchone()
@@ -138,7 +140,8 @@ class DB:
                 "name": row[1],
                 "ip": row[2],
                 "url": row[3],
-                "type": row[4]
+                "systype": row[4],
+                "location": row[5]
             }
 
         except Error as e:
@@ -146,11 +149,11 @@ class DB:
 
         return system
 
-    def save_one_system(self, sys_id, sys_name, sys_ip, sys_url):
+    def save_one_system(self, sys_id, sys_name, sys_ip, sys_url, sys_type, sys_location):
         try:
-            cmd = 'update systems set id = ?, name = ?, ip = ?, url = ? where id = ?;'
+            cmd = 'update systems set id = ?, name = ?, ip = ?, url = ?, systype = ?, location = ? where id = ?;'
             c = self._conn.cursor()
-            c.execute(cmd, (sys_id, sys_name, sys_ip, sys_url, sys_id))
+            c.execute(cmd, (sys_id, sys_name, sys_ip, sys_url, sys_type, sys_location, sys_id))
             self._commit()
 
         except Error as e:

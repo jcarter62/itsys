@@ -10,6 +10,8 @@
         <th>name</th>
         <th>ip</th>
         <th>url</th>
+        <th>type</th>
+        <th>location</th>
         <th>action</th>
     </tr>
     </thead>
@@ -20,7 +22,16 @@
             <td>{{ s["name"] }}</td>
             <td>{{ s["ip"] }}</td>
             <td><a href="{{ s['url'] }}" target="_blank">{{ s["url"] }}</a></td>
-            <td><a href="/edit/{{ s["id"] }}"><span class="badge rounded-pill bg-primary">Edit</span></a></td>
+            <td>{{ s["systype"] }}</td>
+            <td>{{ s["location"] }}</td>
+            <td>
+                <a href="/edit/{{ s["id"] }}">
+                    <img src="{{ url_for('static', filename='/icons/pencil-square.svg')}}"/>
+                </a>
+                <a href="/delete/{{ s["id"] }}">
+                    <img src="{{ url_for('static', filename='/icons/trash.svg')}}"/>
+                </a>
+            </td>
         </tr>
         {% endfor %}
         </tbody>
