@@ -1,11 +1,18 @@
-from flask import Flask, render_template, request, redirect, make_response, send_file
+from flask import Flask, render_template, request, redirect, make_response, send_file, url_for
 from db import DB
 from flask_bootstrap import Bootstrap
 import csv
 import io
+import os
+from importcsv import ImportCSV
 
 app = Flask(__name__)
 Bootstrap(app)
+
+
+# Upload folder
+UPLOAD_FOLDER = 'static/files'
+app.config['UPLOAD_FOLDER'] =  UPLOAD_FOLDER
 
 
 @app.before_request
@@ -59,6 +66,14 @@ def route_add_system():
     return redirect(url)
 
 
+@app.route('/maintenance')
+def route_maintenance():
+    context = {
+        "title": "Maintenance"
+    }
+    return render_template('maintenance.html', context=context)
+
+
 def qtit(s) -> str:
     return '"' + s + '"'
 
@@ -75,6 +90,52 @@ def route_export():
             csvwriter.writerow([row['name'], row['ip'], row['url'], row['systype'], row['location']])
 
     return send_file('/temp/systems.csv')
+
+
+@app.route('/upload')
+def route_upload():
+    # ref: https://medevel.com/flask-tutorial-upload-csv-file-and-insert-rows-into-the-database/
+    context = {
+        "title": "Maintenance"
+    }
+    return render_template('uploadcsv.html', context=context)
+
+
+@app.route('/upload-post', methods=['POST'])
+def route_upload_post():
+    # get the uploaded file
+    uploaded_file = request.files['file']
+    if uploaded_file.filename != '':
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
+        # set the file path
+        uploaded_file.save(file_path)
+    # save the file
+    imp = ImportCSV()
+    data = imp.parseCSV(file_path)
+    db = DB()
+    db.load_from_array(data)
+
+    return redirect('/')
+
+
+@app.route('/delete/<sys_id>', methods=['GET'])
+def route_delete_system_get(sys_id):
+    data = DB()
+    system = data.load_one_system(sys_id)
+    context = {
+        "system": system,
+        "title": "Edit System "
+    }
+    return render_template('delete-confirm.html', context=context)
+
+
+@app.route('/delete-confirmed', methods=['POST'])
+def route_delete_confirmed_post():
+    sys_id = request.form['sys_id']
+    data = DB()
+    data.delete_one_system(sys_id)
+    return redirect('/')
+
 
 if __name__ == '__main__':
     app.run()

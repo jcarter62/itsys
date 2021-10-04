@@ -26,10 +26,10 @@
             <td>{{ s["location"] }}</td>
             <td>
                 <a href="/edit/{{ s["id"] }}">
-                    <img src="{{ url_for('static', filename='/icons/pencil-square.svg')}}"/>
+                    <img src="{{ url_for('static', filename='/icons/pencil-square.svg')}}" alt="edit"/>
                 </a>
                 <a href="/delete/{{ s["id"] }}">
-                    <img src="{{ url_for('static', filename='/icons/trash.svg')}}"/>
+                    <img src="{{ url_for('static', filename='/icons/trash.svg')}}" alt="delete"/>
                 </a>
             </td>
         </tr>

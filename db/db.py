@@ -132,7 +132,7 @@ class DB:
         try:
             cmd = 'select id, name, ip, url, systype, location from systems where id = ?;'
             c = self._conn.cursor()
-            c = c.execute(cmd, sys_id)
+            c = c.execute(cmd, [sys_id])
             row = c.fetchone()
 
             system = {
@@ -181,3 +181,55 @@ class DB:
 
         return new_id
 
+    def load_from_array(self, data):
+        max_id = 0
+
+        # Truncate table
+        try:
+            c1 = self._conn.cursor()
+            cmd1 = 'delete from systems;'
+            c1.execute(cmd1)
+            self._commit()
+        except Error as e:
+            print(e)
+
+        # Get max id
+        try:
+            cmd = 'select max(id) as num from systems;'
+            c = self._conn.cursor()
+            c = c.execute(cmd)
+            row = c.fetchone()
+
+            max_id = row[0]
+            if max_id is None:
+                max_id = 0
+
+        except Error as e:
+            print(e)
+
+        # Iterate data
+        insert_cmd = 'insert into systems (id, name, ip, url, systype, location ) values (?, ?, ?, ?, ?, ?);'
+        new_id = max_id
+        for row in data:
+            new_id = new_id + 1
+            p_name = row['name']
+            p_ip = row['ip']
+            p_url = row['url']
+            p_systype = row['systype']
+            p_location = row['location']
+            c.execute(insert_cmd, (new_id, p_name, p_ip, p_url, p_systype, p_location))
+
+
+        self._commit()
+        return
+
+    def delete_one_system(self, sys_id):
+        try:
+            c1 = self._conn.cursor()
+            cmd1 = 'delete from systems where id = ?;'
+            c1.execute(cmd1, [sys_id])
+            self._commit()
+
+        except Error as e:
+            print(e)
+        return
