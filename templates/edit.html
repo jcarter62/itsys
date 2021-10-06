@@ -1,26 +1,50 @@
 {% extends 'base.html' %}
 {% block content %}
-<table class="table table-hover table-striped">
-<thead>
-<tr>
-    <th>Item</th>
-    <th>Value</th>
-</tr>
-</thead>
-    <tbody>
+    <table class="table table-hover table-striped">
+        <thead>
+        <tr>
+            <th>Item</th>
+            <th>Value</th>
+        </tr>
+        </thead>
+        <tbody>
         <form action="/save" method="post">
             <input type="hidden" name="sys_id" value="{{ context.system['id'] }}">
-        <tr><td>ID</td><td>{{ context.system["id"] }}</td></tr>
-        <tr><td>Name</td><td><input type="text" value="{{ context.system['name']}}" name="sys_name"></td></tr>
-        <tr><td>IP</td><td><input type="text" value="{{ context.system['ip']}}" name="sys_ip"></td></tr>
-        <tr><td>Url</td><td><input type="text" value="{{ context.system['url']}}" name="sys_url"></td></tr>
-            <tr><td>Type</td><td><input type="text" value="{{ context.system['systype']}}" name="sys_type"></td></tr>
-            <tr><td>Location</td><td><input type="text" value="{{ context.system['location']}}" name="sys_location"></td></tr>
-        <tr>
-            <td>&nbsp;</td>
-            <td><button type="reset">Cancel</button>&nbsp;<button type="submit">Save</button></td>
-        </tr>
+            <tr>
+                <td>ID</td>
+                <td>{{ context.system["id"] }}</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td><input type="text" value="{{ context.system['name'] }}" name="sys_name"></td>
+            </tr>
+            <tr>
+                <td>IP</td>
+                <td><input type="text" value="{{ context.system['ip'] }}" name="sys_ip"></td>
+            </tr>
+            <tr>
+                <td>Url</td>
+                <td><input type="text" value="{{ context.system['url'] }}" name="sys_url"></td>
+            </tr>
+            <tr>
+                <td>Type</td>
+                <td><input type="text" value="{{ context.system['systype'] }}" name="sys_type"></td>
+            </tr>
+            <tr>
+                <td>Location</td>
+                <td><input type="text" value="{{ context.system['location'] }}" name="sys_location"></td>
+            </tr>
+            <tr>
+                <td>Note</td>
+                <td><input type="text" value="{{ context.system['note'] }}" name="sys_note"></td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>
+                    <button type="reset">Cancel</button>&nbsp;<button type="submit">Save</button>
+                </td>
+            </tr>
         </form>
-    </tbody>
-</table>
+        </tbody>
+    </table>
 {% endblock %}

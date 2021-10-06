@@ -3,7 +3,7 @@
 {% endblock %}
 
 {% block content %}
-    <table class="table table-hover table-striped">
+    <table class="table table-hover table-striped" id="system_table">
     <thead>
     <tr>
         <th>id</th>
@@ -12,18 +12,20 @@
         <th>url</th>
         <th>type</th>
         <th>location</th>
+        <th>note</th>
         <th>action</th>
     </tr>
     </thead>
         <tbody>
         {% for s in context.systems %}
-        <tr>
+        <tr id="row{{ s["id"] }}">
             <td>{{ s["id"] }}</td>
             <td>{{ s["name"] }}</td>
             <td>{{ s["ip"] }}</td>
             <td><a href="{{ s['url'] }}" target="_blank">{{ s["url"] }}</a></td>
             <td>{{ s["systype"] }}</td>
             <td>{{ s["location"] }}</td>
+            <td>{{ s["note"] }}</td>
             <td>
                 <a href="/edit/{{ s["id"] }}">
                     <img src="{{ url_for('static', filename='/icons/pencil-square.svg')}}" alt="edit"/>

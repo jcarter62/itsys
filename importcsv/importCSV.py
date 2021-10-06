@@ -8,7 +8,7 @@ class ImportCSV:
         self.data = []
 
     def parseCSV(self, filePath):
-        col_names = ['name', 'ip', 'url', 'systype', 'location']
+        col_names = ['name', 'ip', 'url', 'systype', 'location', 'note']
         csvData = pd.read_csv(filePath, names=col_names, header=0)
         for i, row in csvData.iterrows():
             self.data.append(row)

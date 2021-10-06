@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, make_response, send
 from db import DB
 from flask_bootstrap import Bootstrap
 import csv
-import io
 import os
 from importcsv import ImportCSV
 
@@ -51,9 +50,10 @@ def route_save_system_post():
     sys_url = request.form['sys_url']
     sys_type = request.form['sys_type']
     sys_location = request.form['sys_location']
+    sys_note = request.form['sys_note']
 
     data = DB()
-    data.save_one_system(sys_id, sys_name, sys_ip, sys_url, sys_type, sys_location)
+    data.save_one_system(sys_id, sys_name, sys_ip, sys_url, sys_type, sys_location, sys_note)
     url = '/edit/{}'.format(sys_id)
     return redirect(url)
 
@@ -85,9 +85,9 @@ def route_export():
 
     with open('/temp/systems.csv', 'w', newline='') as csvfile:
         csvwriter = csv.writer(csvfile, delimiter=',', quotechar='"')
-        csvwriter.writerow(['name', 'ip', 'url', 'systype', 'location'])
+        csvwriter.writerow(['name', 'ip', 'url', 'systype', 'location', 'note'])
         for row in all_data:
-            csvwriter.writerow([row['name'], row['ip'], row['url'], row['systype'], row['location']])
+            csvwriter.writerow([row['name'], row['ip'], row['url'], row['systype'], row['location'], row['note']])
 
     return send_file('/temp/systems.csv')
 
