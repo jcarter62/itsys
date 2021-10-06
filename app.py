@@ -8,7 +8,6 @@ from importcsv import ImportCSV
 app = Flask(__name__)
 Bootstrap(app)
 
-
 # Upload folder
 UPLOAD_FOLDER = 'static/files'
 app.config['UPLOAD_FOLDER'] =  UPLOAD_FOLDER
@@ -74,8 +73,11 @@ def route_maintenance():
     return render_template('maintenance.html', context=context)
 
 
-def qtit(s) -> str:
-    return '"' + s + '"'
+# def quote_str(s) -> str:
+#     if s is None:
+#         return '""'
+#     else:
+#         return '"' + s + '"'
 
 
 @app.route('/export')
@@ -84,10 +86,10 @@ def route_export():
     all_data = data.load_systems()
 
     with open('/temp/systems.csv', 'w', newline='') as csvfile:
-        csvwriter = csv.writer(csvfile, delimiter=',', quotechar='"')
-        csvwriter.writerow(['name', 'ip', 'url', 'systype', 'location', 'note'])
+        csv_writer = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
+        csv_writer.writerow(['name', 'ip', 'url', 'systype', 'location', 'note'])
         for row in all_data:
-            csvwriter.writerow([row['name'], row['ip'], row['url'], row['systype'], row['location'], row['note']])
+            csv_writer.writerow([row['name'], row['ip'], row['url'], row['systype'], row['location'], row['note']])
 
     return send_file('/temp/systems.csv')
 
